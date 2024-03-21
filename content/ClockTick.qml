@@ -8,10 +8,10 @@ Item {
         id: rectangle
 
         width: 10
-        height: 40
+        height: 30
         color: "black"
 
         x: -5
-        y: 160
+        y: 170
     }
 }

@@ -1,6 +1,14 @@
 import QtQuick 6.2
 
 Item {
+    property real itemRotation: 0.0
+
+    transform: Rotation {
+        origin.x: 0
+        origin.y: 0
+        angle: itemRotation
+    }
+
     ClockTick {
         id: tick
 

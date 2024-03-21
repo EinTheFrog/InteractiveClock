@@ -16,15 +16,20 @@ Item {
         model: 12
 
         ClockSegment {
-            id: clockSegment0
-
             x: 200
             y: 200
-            transform: Rotation {
-                origin.x: 0
-                origin.y: 0
-                angle: index * 30
-            }
+            itemRotation: index * 30
+        }
+    }
+
+    Repeater {
+        model: 12
+
+        ClockText {
+            x: 200
+            y: 200
+            hour: (index + 5) % 12 + 1
+            itemRotation: index * 30
         }
     }
 }
