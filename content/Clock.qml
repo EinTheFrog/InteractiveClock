@@ -32,4 +32,11 @@ Item {
             itemRotation: index * 30
         }
     }
+
+    ClockHand {
+        x: 200
+        y: 200
+        item_width: 10
+        item_height: 100
+    }
 }

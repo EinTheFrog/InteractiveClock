@@ -15,37 +15,4 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }
-
-
-    SequentialAnimation {
-        id: animation
-
-        ColorAnimation {
-            id: colorAnimation1
-            target: rectangle
-            property: "color"
-            to: "#2294c6"
-            from: Constants.backgroundColor
-        }
-
-        ColorAnimation {
-            id: colorAnimation2
-            target: rectangle
-            property: "color"
-            to: Constants.backgroundColor
-            from: "#2294c6"
-        }
-    }
-
-    states: [
-        State {
-            name: "clicked"
-            when: button.checked
-
-            PropertyChanges {
-                target: label
-                text: qsTr("Button Checked")
-            }
-        }
-    ]
 }
