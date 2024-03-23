@@ -33,10 +33,8 @@ Item {
         }
     }
 
-    ClockHand {
+    InteractiveClockHands {
         x: 200
         y: 200
-        item_width: 10
-        item_height: 100
     }
 }
