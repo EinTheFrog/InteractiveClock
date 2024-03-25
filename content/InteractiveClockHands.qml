@@ -64,7 +64,23 @@ Item {
                             }
                         }
                         handAngle = Math.atan(diffY / diffX) * 180.0 / Math.PI + angleCorrection;
-                        clock_hand.handAngle = handAngle;
+                        var oldHandAngle = clock_hand.handAngle;
+                        var angleDiffCounterClockwise = (handAngle - oldHandAngle) % 360;
+                        var angleDiffClockwise = angleDiffCounterClockwise > 0.0
+                                           ? angleDiffCounterClockwise - 360.0 : angleDiffCounterClockwise + 360.0;
+                        // Checkng if clockhand made complete rotation
+                        var angleDiff = Math.abs(angleDiffCounterClockwise) < Math.abs(angleDiffClockwise)
+                                           ? angleDiffCounterClockwise : angleDiffClockwise;
+
+                        clock_hand.handAngle = (clock_hand.handAngle + angleDiff) % 360;
+                        if (hour_hand.state === "dragged") {
+                            minute_hand.handAngle = (minute_hand.handAngle + angleDiff * 12) % 360;
+                        } else {
+                            hour_hand.handAngle = (hour_hand.handAngle + angleDiff / 12) % 360;
+                        }
+
+                        time_text.hours = Math.round(((hour_hand.handAngle - 180.0) / 30)) + 1
+                        time_text.minutes = Math.round(((minute_hand.handAngle - 180.0) / 6))
                     }
 
                     mouse.accepted = false;
@@ -88,6 +104,16 @@ Item {
             itemY: container.centerY
             itemWidth: 8
             itemHeight: 150
+        }
+
+        TimeText {
+            id: time_text
+
+            x: container.centerX
+            y: container.centerY
+
+            hours: 12
+            minutes: 12
         }
     }
 }

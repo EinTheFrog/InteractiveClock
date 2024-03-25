@@ -19,4 +19,5 @@ qt6_add_qml_module(content
         QML_FILES
         QML_FILES InteractiveClockHands.qml
         QML_FILES ClockHand.qml
+        QML_FILES TimeText.qml
 )

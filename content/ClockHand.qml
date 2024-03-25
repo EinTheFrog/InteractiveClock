@@ -7,7 +7,7 @@ Item {
     property real itemY: 0
     property real itemWidth: 10
     property real itemHeight: 100
-    property real handAngle: 0.0
+    property real handAngle: 180.0
 
     Rectangle {
 
