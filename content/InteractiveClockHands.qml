@@ -17,6 +17,39 @@ Item {
         height: 400
         color: "transparent"
 
+
+
+
+        Timer {
+            id: timer
+            interval: 1000; running: true; repeat: true
+            onTriggered: timer.moveMinuteHand()
+
+            function moveMinuteHand() {
+                if (hour_hand.state === "dragged" || minute_hand.state === "dragged") {
+                    return;
+                }
+
+                var minuteAngleDiff = 6.0;
+                var hourAngleDiff = minuteAngleDiff / 12;
+
+                var hourHandAngle = container.normalizeAngle(hour_hand.handAngle + hourAngleDiff);
+                var minuteHandAngle = container.normalizeAngle(minute_hand.handAngle + minuteAngleDiff);
+
+                var hourTimeAngle = container.handAngleToTimeAngle(hourHandAngle);
+                var minuteTimeAngle = container.handAngleToTimeAngle(minuteHandAngle);
+
+                var hours = container.timeAngleToHours(hourTimeAngle);
+                var minutes = container.timeAngleToMinutes(minuteTimeAngle);
+
+                var hourOldTimeAngle = container.handAngleToTimeAngle(hour_hand.handAngle);
+                var hourCompleteRotation = container.hasHandMadeRotation(hourTimeAngle, hourOldTimeAngle);
+
+                container.updateClockHands(hourHandAngle, minuteHandAngle);
+                container.updateClockText(hours, minutes, hourCompleteRotation);
+            }
+        }
+
         MouseArea {
             id: mouse_area
 
@@ -52,17 +85,17 @@ Item {
                 var minuteHandIsDragged = minute_hand.state === "dragged";
                 var minuteHandAngle = mouse_area.calculateMinuteHandAngle(minuteHandIsDragged, minute_hand.handAngle, angleDiff);
 
-                var hourTimeAngle = mouse_area.handAngleToTimeAngle(hourHandAngle);
-                var minuteTimeAngle = mouse_area.handAngleToTimeAngle(minuteHandAngle);
+                var hourTimeAngle = container.handAngleToTimeAngle(hourHandAngle);
+                var minuteTimeAngle = container.handAngleToTimeAngle(minuteHandAngle);
 
-                var hours = mouse_area.timeAngleToHours(hourTimeAngle);
-                var minutes = mouse_area.timeAngleToMinutes(minuteTimeAngle);
+                var hours = container.timeAngleToHours(hourTimeAngle);
+                var minutes = container.timeAngleToMinutes(minuteTimeAngle);
 
-                var hourOldTimeAngle = mouse_area.handAngleToTimeAngle(hour_hand.handAngle);
-                var hourCompleteRotation = mouse_area.hasHandMadeRotation(hourTimeAngle, hourOldTimeAngle);
+                var hourOldTimeAngle = container.handAngleToTimeAngle(hour_hand.handAngle);
+                var hourCompleteRotation = container.hasHandMadeRotation(hourTimeAngle, hourOldTimeAngle);
 
-                mouse_area.updateClockHands(hourHandAngle, minuteHandAngle);
-                mouse_area.updateClockText(hours, minutes, hourCompleteRotation);
+                container.updateClockHands(hourHandAngle, minuteHandAngle);
+                container.updateClockText(hours, minutes, hourCompleteRotation);
 
                 mouse.accepted = false;
             }
@@ -109,65 +142,65 @@ Item {
                     So, 2 variables were created for that: angleDiff1 and angleDiff2.
                 */
                 var angleDiff1 = (newAngle - oldAngle) % 360;
-                var angleDiff2 = angleDiff1 > 0.0 ? angleDiff1 - 360.0 : angleDiff1 + 360.0;
+                var angleDiff2 = angleDiff1 > 0 ? angleDiff1 - 360.0 : angleDiff1 + 360.0;
                 var completeRotation = Math.abs(angleDiff1) > Math.abs(angleDiff2);
                 var angleDiff = completeRotation ? angleDiff2 : angleDiff1;
                 return angleDiff;
             }
 
-            function hasHandMadeRotation(newAngle, oldAngle) {
-                var angleDiff1 = (newAngle - oldAngle) % 360;
-                var angleDiff2 = angleDiff1 > 0.0 ? angleDiff1 - 360.0 : angleDiff1 + 360.0;
-                var completeRotation = Math.abs(angleDiff1) > Math.abs(angleDiff2);
-                return completeRotation;
-            }
-
             function calculateHourHandAngle(hourHandIsDragged, oldHourAngle, draggedHandAngleDiff) {
                 var hourHandAngleDiff =  hourHandIsDragged ? draggedHandAngleDiff : draggedHandAngleDiff / 12;
                 var hourHandAngle = oldHourAngle + hourHandAngleDiff;
-                hourHandAngle = mouse_area.normalizeAngle(hourHandAngle);
+                hourHandAngle = container.normalizeAngle(hourHandAngle);
                 return hourHandAngle;
             }
 
             function calculateMinuteHandAngle(minuteHandIsDragged, oldMinuteAngle, draggedHandAngleDiff) {
-                var minuteHandAngleDiff =  minuteHandIsDragged ? draggedHandAngleDiff : draggedHandAngleDiff * 12;
+                var minuteHandAngleDiff = minuteHandIsDragged ? draggedHandAngleDiff : draggedHandAngleDiff * 12;
                 var minuteHandAngle = oldMinuteAngle + minuteHandAngleDiff;
-                minuteHandAngle = mouse_area.normalizeAngle(minuteHandAngle);
+                minuteHandAngle = container.normalizeAngle(minuteHandAngle);
                 return minuteHandAngle;
             }
+        }
 
-            function normalizeAngle(angle) {
-                var normilizedAngle = angle % 360;
-                normilizedAngle = normilizedAngle >= 0 ? normilizedAngle : normilizedAngle + 360.0;
-                return normilizedAngle;
-            }
+        function hasHandMadeRotation(newAngle, oldAngle) {
+            var angleDiff1 = (newAngle - oldAngle) % 360;
+            var angleDiff2 = angleDiff1 > 0 ? angleDiff1 - 360.0 : angleDiff1 + 360.0;
+            var completeRotation = Math.abs(angleDiff1) > Math.abs(angleDiff2);
+            return completeRotation;
+        }
 
-            function handAngleToTimeAngle(handAngle) {
-                var timeAngle = handAngle - 180.0;
-                timeAngle = timeAngle > 0 ? timeAngle : timeAngle + 360.0;
-                return timeAngle;
-            }
+        function normalizeAngle(angle) {
+            var normilizedAngle = angle % 360;
+            normilizedAngle = normilizedAngle >= 0 ? normilizedAngle : normilizedAngle + 360.0;
+            return normilizedAngle;
+        }
 
-            function timeAngleToHours(hourTimeAngle) {
-                var hours =  Math.floor(hourTimeAngle / 30);
-                hours = hours == 0 ? 12 : hours;
-                return hours;
-            }
+        function handAngleToTimeAngle(handAngle) {
+            var timeAngle = handAngle - 180.0;
+            timeAngle = timeAngle >= 0 ? timeAngle : timeAngle + 360.0;
+            return timeAngle;
+        }
 
-            function timeAngleToMinutes(minuteTimeAngle) {
-                return Math.floor(minuteTimeAngle / 6);
-            }
+        function timeAngleToHours(hourTimeAngle) {
+            var hours =  Math.floor(hourTimeAngle / 30);
+            hours = hours == 0 ? 12 : hours;
+            return hours;
+        }
 
-            function updateClockHands(hourHandAngle, minuteHandAngle) {
-                hour_hand.handAngle = hourHandAngle;
-                minute_hand.handAngle = minuteHandAngle;
-            }
+        function timeAngleToMinutes(minuteTimeAngle) {
+            return Math.floor(minuteTimeAngle / 6);
+        }
 
-            function updateClockText(hours, minutes, hourCompleteRotation) {
-                time_text.hours = hours;
-                time_text.minutes = minutes;
-                time_text.am = hourCompleteRotation ? !time_text.am : time_text.am;
-            }
+        function updateClockHands(hourHandAngle, minuteHandAngle) {
+            hour_hand.handAngle = hourHandAngle;
+            minute_hand.handAngle = minuteHandAngle;
+        }
+
+        function updateClockText(hours, minutes, hourCompleteRotation) {
+            time_text.hours = hours;
+            time_text.minutes = minutes;
+            time_text.am = hourCompleteRotation ? !time_text.am : time_text.am;
         }
 
         Rectangle {
