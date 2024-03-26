@@ -10,13 +10,15 @@ Item {
         x: -t_metrics.boundingRect.width / 2
         y: t_metrics.boundingRect.height / 2
 
+        width: t_metrics.boundingRect.width
+        height: t_metrics.boundingRect.height
         color: "#A0FFFFFF"
 
         Text {
             id: time_text
 
             color: "black"
-            text: hours + ":" + minutes
+            text: hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
         }
     }
 

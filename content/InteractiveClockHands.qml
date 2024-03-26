@@ -72,15 +72,29 @@ Item {
                         var angleDiff = Math.abs(angleDiffCounterClockwise) < Math.abs(angleDiffClockwise)
                                            ? angleDiffCounterClockwise : angleDiffClockwise;
 
-                        clock_hand.handAngle = (clock_hand.handAngle + angleDiff) % 360;
-                        if (hour_hand.state === "dragged") {
-                            minute_hand.handAngle = (minute_hand.handAngle + angleDiff * 12) % 360;
-                        } else {
-                            hour_hand.handAngle = (hour_hand.handAngle + angleDiff / 12) % 360;
-                        }
+                        var hourHandAngle = hour_hand.state === "dragged"
+                                           ? hour_hand.handAngle + angleDiff : hour_hand.handAngle + angleDiff / 12;
+                        hourHandAngle = hourHandAngle % 360;
+                        hourHandAngle = hourHandAngle >= 0 ? hourHandAngle : hourHandAngle + 360.0;
 
-                        time_text.hours = Math.round(((hour_hand.handAngle - 180.0) / 30)) + 1
-                        time_text.minutes = Math.round(((minute_hand.handAngle - 180.0) / 6))
+                        var minuteHandAngle = minute_hand.state === "dragged"
+                                           ? minute_hand.handAngle + angleDiff : minute_hand.handAngle + angleDiff * 12;
+                        minuteHandAngle = minuteHandAngle % 360;
+                        minuteHandAngle = minuteHandAngle >= 0 ? minuteHandAngle : minuteHandAngle + 360.0;
+
+                        hour_hand.handAngle = hourHandAngle;
+                        minute_hand.handAngle = minuteHandAngle;
+
+                        var hourTimeAngle = (hourHandAngle - 180.0);
+                        hourTimeAngle = hourTimeAngle > 0 ? hourTimeAngle : hourTimeAngle + 360.0;
+                        var minuteTimeAngle = (minuteHandAngle - 180.0);
+                        minuteTimeAngle = minuteTimeAngle > 0 ? minuteTimeAngle : minuteTimeAngle + 360.0;
+
+                        var hours =  Math.floor(hourTimeAngle / 30);
+                        hours = hours == 0 ? 12 : hours;
+                        time_text.hours = hours;
+                        var minutes = Math.floor(minuteTimeAngle / 6);
+                        time_text.minutes = minutes;
                     }
 
                     mouse.accepted = false;
@@ -113,7 +127,7 @@ Item {
             y: container.centerY
 
             hours: 12
-            minutes: 12
+            minutes: 0
         }
     }
 }
