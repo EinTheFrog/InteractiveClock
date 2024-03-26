@@ -69,8 +69,8 @@ Item {
                         var angleDiffClockwise = angleDiffCounterClockwise > 0.0
                                            ? angleDiffCounterClockwise - 360.0 : angleDiffCounterClockwise + 360.0;
                         // Checkng if clockhand made complete rotation
-                        var angleDiff = Math.abs(angleDiffCounterClockwise) < Math.abs(angleDiffClockwise)
-                                           ? angleDiffCounterClockwise : angleDiffClockwise;
+                        var completeRotation = Math.abs(angleDiffCounterClockwise) > Math.abs(angleDiffClockwise);
+                        var angleDiff = completeRotation ? angleDiffClockwise : angleDiffCounterClockwise;
 
                         var hourHandAngle = hour_hand.state === "dragged"
                                            ? hour_hand.handAngle + angleDiff : hour_hand.handAngle + angleDiff / 12;
@@ -82,12 +82,9 @@ Item {
                         minuteHandAngle = minuteHandAngle % 360;
                         minuteHandAngle = minuteHandAngle >= 0 ? minuteHandAngle : minuteHandAngle + 360.0;
 
-                        hour_hand.handAngle = hourHandAngle;
-                        minute_hand.handAngle = minuteHandAngle;
-
-                        var hourTimeAngle = (hourHandAngle - 180.0);
+                        var hourTimeAngle = hourHandAngle - 180.0;
                         hourTimeAngle = hourTimeAngle > 0 ? hourTimeAngle : hourTimeAngle + 360.0;
-                        var minuteTimeAngle = (minuteHandAngle - 180.0);
+                        var minuteTimeAngle = minuteHandAngle - 180.0;
                         minuteTimeAngle = minuteTimeAngle > 0 ? minuteTimeAngle : minuteTimeAngle + 360.0;
 
                         var hours =  Math.floor(hourTimeAngle / 30);
@@ -95,6 +92,18 @@ Item {
                         time_text.hours = hours;
                         var minutes = Math.floor(minuteTimeAngle / 6);
                         time_text.minutes = minutes;
+
+                        var hourOldTimengle = hour_hand.handAngle - 180.0;
+                        hourOldTimengle = hourOldTimengle > 0 ? hourOldTimengle : hourOldTimengle + 360.0;
+                        var hourDiffCounterClockwise = (hourTimeAngle - hourOldTimengle) % 360;
+                        var hourDiffClockwise = hourDiffCounterClockwise > 0.0
+                                            ? hourDiffCounterClockwise - 360.0 : hourDiffCounterClockwise + 360.0;
+                        var hourCompleteRotation = Math.abs(hourDiffCounterClockwise) > Math.abs(hourDiffClockwise);
+
+                        time_text.am = hourCompleteRotation ? !time_text.am : time_text.am;
+
+                        hour_hand.handAngle = hourHandAngle;
+                        minute_hand.handAngle = minuteHandAngle;
                     }
 
                     mouse.accepted = false;
