@@ -10,11 +10,13 @@ Item {
     }
 
     ClockTick {
-        id: tick
+        itemWidth: 8
+        itemHeight: 24
 
         transform: Rotation {
             origin.x: 0
             origin.y: 0
+
             angle: 0
         }
     }
@@ -22,7 +24,10 @@ Item {
     Repeater {
         model: 4
 
-        ClockTickThin {
+        ClockTick {
+            itemWidth: 4
+            itemHeight: 16
+
             transform: Rotation {
                 origin.x: 0
                 origin.y: 0

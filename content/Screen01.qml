@@ -10,8 +10,8 @@ Rectangle {
 
     Clock {
         id: clock
-        width: 400
-        height: 400
+        width: Constants.clockRadius * 2
+        height: Constants.clockRadius * 2
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }

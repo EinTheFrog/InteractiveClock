@@ -1,4 +1,5 @@
 import QtQuick 6.2
+import InteractiveClock
 
 Item {
     id: clock_hand
@@ -7,14 +8,14 @@ Item {
     property real itemY: 0
     property real itemWidth: 10
     property real itemHeight: 100
-    property real handAngle: 180.0
+    property real handAngle: 180
 
     Rectangle {
 
         x: itemX - itemWidth / 2
         y: itemY
 
-        color: "black"
+        color: Constants.clockBorderColor
         width: itemWidth
         height: itemHeight
 

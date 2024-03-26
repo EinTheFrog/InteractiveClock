@@ -1,17 +1,20 @@
 import QtQuick 6.2
+import InteractiveClock
 
 Item {
-    width: 10
-    height: 200
+    property real itemWidth: 10
+    property real itemHeight: 30
+    property real clockRadius: Constants.clockRadius
+    property real borderWidth: Constants.clockBorderWidth
 
     Rectangle {
         id: rectangle
 
-        width: 10
-        height: 30
-        color: "black"
+        width: itemWidth
+        height: itemHeight
+        color: Constants.clockBorderColor
 
-        x: -5
-        y: 170
+        x: -width/2
+        y: clockRadius - borderWidth - height
     }
 }

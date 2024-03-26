@@ -3,8 +3,10 @@ import QtQuick 6.2
 import QtQuick.Studio.Application
 
 QtObject {
-    readonly property int width: 400
-    readonly property int height: 400
+    readonly property int width: (clockRadius * 2) + 40
+    readonly property int height: (clockRadius * 2) + 40
+    readonly property int clockRadius: 200
+    readonly property int clockBorderWidth: 20
 
     property string relativeFontDirectory: "fonts"
 
@@ -19,6 +21,8 @@ QtObject {
                                               })
 
     readonly property color backgroundColor: "#EAEAEA"
+    readonly property color clockBackgroundColor: "#FFFFFF"
+    readonly property color clockBorderColor: "#000000"
 
 
     property StudioApplication application: StudioApplication {
